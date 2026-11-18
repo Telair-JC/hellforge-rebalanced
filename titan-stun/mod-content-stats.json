@@ -1,0 +1,140 @@
+{
+  "format": 1,
+  "mod:giblett.scope-of-authority": {
+    "R-40 Sightliner": {
+      "damage.demolition": 20,
+      "damage.durable_damage": 300,
+      "damage.standard_damage": 450,
+      "magazine.magazines_from_supply": 8,
+      "magazine.starting_magazines": 5,
+      "weapon.capacity": 6,
+      "weapon.ergonomics": 55,
+      "weapon.fire_rate": 40,
+      "weapon.third_person_reticle": 4,
+      "weapon.sway": 0.5
+    },
+    "P-44 Mist": {
+      "damage.durable_damage": 60,
+      "damage.push_force": 5,
+      "damage.stagger": 20,
+      "damage.standard_damage": 180,
+      "magazine.magazines_from_supply": 8,
+      "magazine.spare_magazines": 8,
+      "magazine.starting_magazines": 6,
+      "projectile.drag": 0.8,
+      "projectile.mass": 15,
+      "reload.duration": 2,
+      "weapon.capacity": 24,
+      "weapon.ergonomics": 80,
+      "weapon.recoil_drift_vertical": 30,
+      "weapon.vertical_spread": 20,
+      "weapon.sway": 0.7
+    }
+  },
+  "mod:giblett/amw20_apex/apex": {
+    "giblett/amw20_apex/apex": {
+      "damage.primary.demolition": 30,
+      "damage.primary.durable_damage": 1000,
+      "damage.primary.standard_damage": 1500,
+      "projectile.primary.mass": 100,
+      "projectile.primary.velocity": 1050,
+      "weapon.ergonomics": 20,
+      "weapon.fire_rate": 60,
+      "weapon.recoil_climb_horizontal": 12,
+      "weapon.recoil_climb_vertical": 120,
+      "weapon.recoil_drift_horizontal": 120,
+      "weapon.recoil_drift_vertical": 480,
+      "weapon.third_person_reticle": 4,
+      "weapon.sway": 0.8
+    }
+  },
+  "mod:giblett/las44_nova/nova": {
+    "giblett/las44_nova/nova": {
+      "damage.primary.demolition": 20,
+      "projectile.primary.velocity": 1300,
+      "weapon.ergonomics": 40,
+      "weapon.sway": 0.7,
+      "heat.charge_gain_per_second": 75,
+      "heat.cool_per_second": 25,
+      "heat.cool_per_second_overheated": 25,
+      "weapon.recoil_climb_vertical": 80,
+      "weapon.recoil_drift_vertical": 80
+    }
+  },
+  "mod:giblett/incinerator/incinerator": {
+    "giblett/incinerator/incinerator": {
+      "weapon.ergonomics": 30,
+      "weapon.sway": 0.8,
+      "rounds.spare_rounds": 42,
+      "rounds.starting_rounds": 30,
+      "rounds.rounds_from_supply": 30,
+      "reload.duration": 2
+    }
+  },
+  "mod:giblett/pylon_launcher/pylon_launcher": {
+    "giblett/pylon_launcher/pylon_launcher": {
+      "damage.primary.durable_damage": 1000,
+      "damage.primary.standard_damage": 1200,
+      "projectile.primary.drag": 3,
+      "projectile.primary.lifetime": 2,
+      "projectile.primary.velocity": 100,
+      "terminal.primary.expiry.explosion": 41,
+      "terminal.primary.impact.explosion": 41,
+      "magazine.spare_magazines": 12,
+      "magazine.starting_magazines": 12,
+      "weapon.ergonomics": 40,
+      "weapon.sway": 0.8,
+      "weapon.horizontal_spread": 1,
+      "weapon.vertical_spread": 1,
+      "weapon.recoil_drift_horizontal": 25,
+      "weapon.recoil_drift_vertical": 150,
+      "weapon.recoil_climb_horizontal": 10,
+      "weapon.recoil_climb_vertical": 50
+    }
+  },
+  "mod:giblett/incendiary_gatling_barrage/incendiary_gatling_barrage": {
+    "giblett/incendiary_gatling_barrage/incendiary_gatling_barrage": {
+      "orbital.salvos": 8,
+      "orbital.shell_interval": 0.025,
+      "stratagem.cooldown": 100
+    }
+  },
+  "mod:giblett/orbital_arc_barrage/orbital_arc_barrage": {
+    "giblett/orbital_arc_barrage/orbital_arc_barrage": {
+      "orbital.salvos": 8,
+      "orbital.salvo_interval": 1.25,
+      "orbital.scatter": 25,
+      "orbital.shell_interval": 0.375
+    }
+  },
+  "mod:giblett/orbital_plasma_barrage/orbital_plasma_barrage": {
+    "giblett/orbital_plasma_barrage/orbital_plasma_barrage": {
+      "orbital.scatter": 25,
+      "orbital.salvo_interval": 0.5,
+      "orbital.salvos": 8
+    }
+  },
+  "mod:giblett/sanitiser/sanitiser": {
+    "giblett/sanitiser/sanitiser": {
+      "weapon.ergonomics": 20
+    }
+  },
+  "mod:skyeshade/compendium/orbital_gas_barrage": {
+    "skyeshade/compendium/orbital_gas_barrage": {
+      "stratagem.cooldown": 180,
+      "orbital.salvos": 5,
+      "orbital.shells_per_salvo": 5,
+      "orbital.scatter": 25,
+      "orbital.shell_interval": 0.5
+    }
+  },
+  "mod:skyeshade/compendium/orbital_ems_barrage": {
+    "skyeshade/compendium/orbital_ems_barrage": {
+      "stratagem.cooldown": 120,
+      "orbital.salvos": 5,
+      "orbital.shells_per_salvo": 5,
+      "orbital.scatter": 25,
+      "orbital.shell_interval": 0.5
+    }
+  }
+}
