@@ -3,7 +3,7 @@ Rebalance mod for Hellforge. Increases high-end difficulty, improves gameplay 'f
 
 **Current version: 1.0.7** · Made for game build 25480438, the build HellForge runs.
 
-[Full patch notes](docs/index.html) · [Releases](../../releases)
+[Full patch notes](https://telair-jc.github.io/hellforge-rebalanced/) · [Releases](../../releases)
 
 ## What it does
 
@@ -15,7 +15,7 @@ Rebalance mod for Hellforge. Increases high-end difficulty, improves gameplay 'f
 
 ## What's covered
 
-Every change is listed old → new in the [patch notes](docs/index.html), with a Balance Intent explaining the goal for most weapons and categories.
+Every change is listed old → new in the [patch notes](https://telair-jc.github.io/hellforge-rebalanced/), with a Balance Intent explaining the goal for most weapons and categories.
 
 - **Primary weapons:** Assault Rifles, Marksman Rifles, Submachine Guns, Shotguns, Energy Weapons and Explosive Weapons
 - **Secondary weapons:** Pistols and Special
