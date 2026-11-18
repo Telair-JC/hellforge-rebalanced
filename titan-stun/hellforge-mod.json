@@ -1,0 +1,12 @@
+{
+  "format": 1,
+  "id": "local.titan-stun",
+  "name": "Hellforge Rebalanced",
+  "version": "1.0.7",
+  "description": "Base-game rebalance (hellforge-stats.json, difficulty 7-10 included), changes to mod-added weapons and stratagems from Giblett's mods and the Stratagem Compendium (mod-content-stats.json), plus: the Bile Titan, Spore Burst Bile Titan and Impaler stunnable again, and the G-6 Frag's shrapnel at 400. Code mod; game build 25480438.",
+  "gameplay": true,
+  "code": {
+    "dll": "titan_stun.dll",
+    "sdk": 13
+  }
+}
