@@ -23,7 +23,7 @@ Rebalance mod for Hellforge. Increases high-end difficulty, improves gameplay 'f
 
 These are required for the intended gameplay experience:
 
-- **[Weakpoint Lock-On](https://github.com/Telair-JC/weakpoint-lock-on)**: Balance of tracking weapons, guard dogs, sentries, and arc weapons is all tested with this mod in mind. Without this mod, the Spear is likely unsalvageable. Without it, gameplay experience won't work as-intended for any weapons which track, and arc weapons in particular.
+- **[Weakpoint Lock-On](https://github.com/Telair-JC/weakpoint-lockon)**: Balance of tracking weapons, guard dogs, sentries, and arc weapons is all tested with this mod in mind. Without this mod, the Spear is likely unsalvageable. Without it, gameplay experience won't work as-intended for any weapons which track, and arc weapons in particular.
 - **[Smarter Guard Dogs & Sentries](https://hf-mod.com/Mods/Details/80)**: Balance of guard dogs and sentries was tuned with this mod in mind. Without it, gameplay experience isn't going to work quite as-intended, especially for some guard dogs.
 
 ### Recommended
