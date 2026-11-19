@@ -10,6 +10,8 @@
  * finds the row by its id and keeps the edit across reloads.
  * HellForge's and HD2Runtime's reviewed range for this field is 0..64; set_live checks only that the value fits a u32,
  * so 400 is allowed but untested. Lower FRAG_SHRAPNEL if it causes trouble.
+ * The TM-1 Lure Mine's shrapnel count (ExplosionSettings row 117, "TM-1 Lure Mine (detonation)") is raised to 400 the same way,
+ * for the same reason: the stats file cannot hold it, because the loader limits that field to 0..64.
  *
  * The change has to be made while the game loads its entity data, so the mod hooks the game's entity loader (game.dll +
  * 0xFDB440, the function HellForge's own stats pass hooks) and writes as soon as it returns: the same moment HellForge's
@@ -55,6 +57,8 @@
 
 #define FRAG_EXPLOSION 257u   /* ExplosionSettings row: G-6 Frag (detonation) */
 #define FRAG_SHRAPNEL 400u    /* vanilla 35 */
+#define LURE_EXPLOSION 117u   /* ExplosionSettings row: TM-1 Lure Mine (detonation) */
+#define LURE_SHRAPNEL 400u    /* vanilla 35 */
 
 /* The units given Stun, when they have no Stun entry of their own. The Impaler's tentacles are separate units, also
  * without Stun; add {0x672F7DA17F3BA34Aull, "Impaler Tentacle"} to stun them along with the body. */
@@ -329,20 +333,28 @@ static void GameLoaded(HfMod* mod, HfEvent event, void* user)
 static int g_fragState;     /* 0 waiting for the event, 1 trying, 2 done (or given up) */
 static float g_fragWait, g_fragWaited;
 
-static int TryFrag(HfMod* mod)
+/* The explosions whose shrapnel count is raised: HellForge's stats file limits this field to 0..64, so it is set here. */
+typedef struct { uint32_t row; uint32_t count; const char* name; int done; } ShrapnelTarget;
+static ShrapnelTarget g_shrapnel[] = {
+    {FRAG_EXPLOSION, FRAG_SHRAPNEL, "G-6 Frag", 0},
+    {LURE_EXPLOSION, LURE_SHRAPNEL, "TM-1 Lure Mine", 0},
+};
+#define SHRAPNEL_TARGETS (sizeof g_shrapnel / sizeof g_shrapnel[0])
+
+static int TryShrapnel(HfMod* mod, ShrapnelTarget* t)
 {
     HfField field = HF_FIELD(ExplosionSettings, shrapnel_count);
     HfLiveValue before;
-    if (!g_hf->get_live(mod, FRAG_EXPLOSION, &field, &before)) return 0; /* not reachable yet */
-    HfValue value = HF_U32(FRAG_SHRAPNEL);
-    int applies = g_hf->set_live(mod, FRAG_EXPLOSION, &field, &value, 0);
+    if (!g_hf->get_live(mod, t->row, &field, &before)) return 0; /* not reachable yet */
+    HfValue value = HF_U32(t->count);
+    int applies = g_hf->set_live(mod, t->row, &field, &value, 0);
     if (!applies)
     {
-        LOG("G-6 Frag: not changed as its own row (%s); trying as a shared row", g_hf->last_log(mod));
-        applies = g_hf->set_live(mod, FRAG_EXPLOSION, &field, &value, HF_LIVE_SHARED);
+        LOG("%s: not changed as its own row (%s); trying as a shared row", t->name, g_hf->last_log(mod));
+        applies = g_hf->set_live(mod, t->row, &field, &value, HF_LIVE_SHARED);
     }
-    if (!applies) LOG("G-6 Frag: shrapnel count not changed (%s)", g_hf->last_log(mod));
-    else LOG("G-6 Frag: shrapnel count %.0f -> %u (game's own %.0f)", before.now.number, FRAG_SHRAPNEL, before.base.number);
+    if (!applies) LOG("%s: shrapnel count not changed (%s)", t->name, g_hf->last_log(mod));
+    else LOG("%s: shrapnel count %.0f -> %u (game's own %.0f)", t->name, before.now.number, t->count, before.base.number);
     return 1;
 }
 
@@ -362,9 +374,20 @@ static void FragTick(HfMod* mod, float dt, void* user)
     g_fragWait -= dt;
     if (g_fragWait > 0.0f) return;
     g_fragWait = FRAG_RETRY_SECONDS;
-    if (TryFrag(mod)) { g_fragState = 2; return; }
+    int pending = 0;
+    for (size_t i = 0; i < SHRAPNEL_TARGETS; i++)
+    {
+        if (g_shrapnel[i].done) continue;
+        if (TryShrapnel(mod, &g_shrapnel[i])) g_shrapnel[i].done = 1;
+        else pending++;
+    }
+    if (!pending) { g_fragState = 2; return; }
     if (g_fragWaited >= FRAG_GIVE_UP_SECONDS)
-    { LOG("G-6 Frag: explosion row %u was still not reachable after %.0f s; shrapnel left as it is", FRAG_EXPLOSION, (double)g_fragWaited); g_fragState = 2; }
+    {
+        for (size_t i = 0; i < SHRAPNEL_TARGETS; i++)
+            if (!g_shrapnel[i].done) LOG("%s: explosion row %u was still not reachable after %.0f s; shrapnel left as it is", g_shrapnel[i].name, g_shrapnel[i].row, (double)g_fragWaited);
+        g_fragState = 2;
+    }
 }
 
 HF_MOD_EXPORT int hellforge_mod_init(const HfApi* hf, HfMod* mod)
@@ -376,7 +399,7 @@ HF_MOD_EXPORT int hellforge_mod_init(const HfApi* hf, HfMod* mod)
     { hf->log(mod, "made for game build %s, not %s: its addresses would be wrong, so it does nothing", GAME_BUILD, hf->build_id()); return 1; }
     if (hf->on(mod, HF_EVENT_GAME_LOADED, GameLoaded, NULL) != 0) { hf->log(mod, "could not wait for the game to load"); return 1; }
     if (hf->on(mod, HF_EVENT_PROJECTILES_READY, ProjectilesReady, NULL) != 0 || !hf->on_game_thread(mod, FragTick, NULL))
-        hf->log(mod, "could not wait for the explosion table; the Frag stays vanilla");
+        hf->log(mod, "could not wait for the explosion table; the Frag and Lure Mine stay vanilla");
     ModContentInit(hf, mod);
     hf->log(mod, "waiting for game.dll");
     return 0;
