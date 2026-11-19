@@ -13,22 +13,34 @@ Rebalance mod for Hellforge. Increases high-end difficulty, improves gameplay 'f
 - **More build variety.** More equipment can fill the utility role of plugging bug holes and interacting with mission objectives such as the Solo Silo. For example, the Plasma weapons, the Bolt Pistol, the Loyalist's charged shot and the Re-Educator can now destroy bug holes, bot fabricators and warp ships.
 - **Limited, necessary nerfs.** A few systems warp the game's power balance too aggressively, and the Supply Bag is the main one: it now holds 2 supplies instead of 4. Ammo for the Ultimatum, Breacher, Missile Pistol, Grenade Pistol and stims was rebuilt around that change, so the totals stay similar.
 
-## What's covered
+## What's Changed?
 
-Every change is listed old → new in the [patch notes](https://telair-jc.github.io/hellforge-rebalanced/), with a Balance Intent explaining the goal for most weapons and categories.
+[Almost everything - link to full changelog](https://telair-jc.github.io/hellforge-rebalanced/)
 
-- **Primary weapons:** Assault Rifles, Marksman Rifles, Submachine Guns, Shotguns, Energy Weapons and Explosive Weapons
-- **Secondary weapons:** Pistols and Special
-- **Throwables:** grenades and mines, with the aim that each has a niche where it performs well
-- **Support weapons:** Ballistic, Explosive/Launcher, Chemical/Fire, Energy and Expendable weapons
-- **Stratagems:** Orbitals, Airstrikes, Sentries and Backpacks
-- **Attachments:** muzzle devices, underbarrel attachments and optics
-- **Armor passives and boosters**
-- **Mission difficulty:** D7–D10 encounter and patrol settings
-- **Enemies:** Terminids, Automatons and Illuminate
-- **Mod-added content:** this mod also adjusts weapons and stratagems from other creators' mods so they sit within the same power level: Beelzebub's Stratagem Pack (0.4 release), Skyeshade's Stratagem Compendium and the Scope of Authority Backport. More will follow as they are playtested, and the official 0.5 release is expected to improve how well these can be balanced.
+## Partner Mods
 
-A recommended partner mod is Helldivers Survival Rework, which pushes the handling changes further.
+### Required
+
+These are required for the intended gameplay experience:
+
+- **[Weakpoint Lock-On](https://github.com/Telair-JC/weakpoint-lockon)**: Balance of tracking weapons, guard dogs, sentries, and arc weapons is all tested with this mod in mind. Without this mod, the Spear is likely unsalvageable. Without it, gameplay experience won't work as-intended for any weapons which track, and arc weapons in particular.
+- **[Smarter Guard Dogs & Sentries](https://hf-mod.com/Mods/Details/80)**: Balance of guard dogs and sentries was tuned with this mod in mind. Without it, gameplay experience isn't going to work quite as-intended, especially for some guard dogs.
+
+### Recommended
+
+These are highly recommended pairings for the gameplay experience:
+
+- **[Helldivers Survival Rework](https://hf-mod.com/Mods/Details/14)**: Significantly reduces stim tax, noticeably increases Helldiver survivability, and reduces total reinforcements. It's a different feel for the game, but in my opinion it's an improvement, especially if playing with increased enemy levels.
+
+### Optional
+
+These are mods where I am actively trying to maintain equipment balance for:
+
+- **[Scope of Authority Backport](https://hf-mod.com/Mods/Details/52)**: Backport for Scope of Authority warbond, currently a bit buggy in 0.4.0 release but will be improved with 0.5.0. Yes, the Sightliner one-shots Hulk eyes (and pays for it with reduced ammunition).
+- **[Beelzebub's Stratagem Pack](https://hf-mod.com/Mods/Details/4)**: Stratagem pack by Beelzebub, adds a number of interesting tools to the arsenal. Balance of many of these was inconsistent with the system I'd been working on, and have been adjusted accordingly. This does include some nerfs. More adjustments likely after 0.5.0 release.
+- **[Custom Stratagem Compendium](https://hf-mod.com/Mods/Details/1)**: Similar to above, a number of interesting new arsenal tools. Rebalancing of these is ongoing, and will include both buffs and nerfs. More adjustments likely after 0.5.0 release.
+- **[Pick your Bots/Bugs/Squids](https://hf-mod.com/Mods/Details/17)**: This balance pack is balancing around the top ~20% of equipment in the game, and let's face it... the game just isn't that difficult with a competent team and gear that powerful, even at the increased threat levels of this mod. This lets you make it genuinely hard. Personally, if I'm playing with at least 2 people, I recommend making breaches more scary by reducing the reinforcement cost of units in the breach, but up to you to experiment. In the future I may make presets to recommend, but that's a ways down the road.
+- **[Armored Overhaul](https://hf-mod.com/Mods/Details/15)**: This mod is very cool, and very fun, but if you use this mod you should almost certainly limit all versions of the tank stratagems to a single use per game. If I build a modpack in the future, this will be in it and tanks will be single use.
 
 ## Install
 
