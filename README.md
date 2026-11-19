@@ -30,7 +30,7 @@ These are required for the intended gameplay experience:
 
 These are highly recommended pairings for the gameplay experience:
 
-- **[Helldiver Health, Ragdoll & Cover Rework](https://hf-mod.com/Mods/Details/14)**: Significantly reduces stim tax, noticeably increases Helldiver survivability, and reduces total reinforcements. It's a different feel for the game, but in my opinion it's an improvement, especially if playing with increased enemy levels.
+- **[Helldivers Survival Rework](https://hf-mod.com/Mods/Details/14)**: Significantly reduces stim tax, noticeably increases Helldiver survivability, and reduces total reinforcements. It's a different feel for the game, but in my opinion it's an improvement, especially if playing with increased enemy levels.
 
 ### Optional
 
