@@ -2002,7 +2002,7 @@
       "throwable.count_from_supply": 3
     },
     "TM-1 Lure Mine": {
-      "explosion.shrapnel_count": 400,
+      "explosion.shrapnel_count": 32,
       "throwable.count_from_supply": 3,
       "throwable.launch_distance_max": 6
     }
