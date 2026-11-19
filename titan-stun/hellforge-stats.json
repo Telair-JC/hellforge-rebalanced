@@ -1906,7 +1906,9 @@
       "explosion.damage.ap_direct": 4,
       "explosion.inner_radius": 3,
       "explosion.outer_radius": 6,
-      "explosion.shockwave_radius": 9
+      "explosion.shockwave_radius": 9,
+      "explosion.damage.status_2_type": 32,
+      "explosion.damage.status_2_strength": 100
     },
     "G-16 Impact": {
       "explosion.damage.ap_extreme": 2,
