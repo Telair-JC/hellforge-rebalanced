@@ -529,7 +529,7 @@
       "presentation.traits.1": 3085090887,
       "attachment.magazine.laser_heatsink_medium_improved_cooldown.heat.capacity": 75,
       "attachment.magazine.laser_heatsink_medium_improved_heatcapacity.heat.capacity": 125,
-      "attachment.magazine.laser_heatsink_medium_improved_heatcapacity.attachment.reload_duration": 3
+      "attachment.magazine.laser_heatsink_medium_improved_heatcapacity.reload_duration": 3
     },
     "LAS-58 Talon": {
       "heat.heat_per_shot": 13,
