@@ -68,6 +68,9 @@ exactly as F8 would.
 - **AR-23L Liberator Legacy (optional):** AR-Liberator-Legacy backport by alazynoob. Its fire rate, sway, recoil and
   and burst (it replaces the first fire mode, auto) are written as live edits on top of that mod's own stats, so they win whatever the load order
   (keeping Rebalanced above it is still tidy). If the Legacy isn't installed, the values are skipped with one log line.
+  It also replaces the Legacy's in-game description with one that matches the burst change: the mod finds the backport's
+  description text in memory once at startup and writes the new text over it, then stops (one log line). If the text
+  isn't found (a changed backport version), nothing is touched.
   Check `mod-local.titan-stun.log` for
   `Legacy first fire mode` and `Legacy ... =` lines.
 - **Your own `mod-stats.json`:** you no longer need it for these. You can leave it (F8 applies the same values on top,
