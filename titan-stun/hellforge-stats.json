@@ -1790,20 +1790,21 @@
     "Orbital EMS Strike": {
       "explosion.outer_radius": 24,
       "explosion.shockwave_radius": 25,
-      "stratagem.cooldown": 70
+      "stratagem.cooldown": 50
     },
     "Orbital Gas Strike": {
       "explosion.outer_radius": 16,
       "orbital.scatter": 7,
       "orbital.shell_interval": 0.25,
-      "stratagem.cooldown": 70,
+      "stratagem.cooldown": 60,
       "orbital.shells_per_salvo": 3
     },
     "Orbital Gatling Barrage": {
       "explosion.inner_radius": 2.5,
       "explosion.outer_radius": 5,
       "orbital.salvos": 5,
-      "orbital.shell_interval": 0.025
+      "orbital.shell_interval": 0.025,
+      "stratagem.cooldown": 60
     },
     "Orbital Laser": {
       "orbital.duration": 36,
@@ -1815,7 +1816,7 @@
       "explosion.inner_radius": 8,
       "explosion.outer_radius": 16,
       "stratagem.call_in_time": 0,
-      "stratagem.cooldown": 70
+      "stratagem.cooldown": 60
     },
     "Orbital Railcannon Strike": {
       "explosion.outer_radius": 5,
@@ -1942,7 +1943,8 @@
       "status.duration": 2
     },
     "G-4 Gas": {
-      "throwable.count_from_supply": 3
+      "throwable.count_from_supply": 3,
+      "throwable.max_count": 5
     },
     "G-48 Giga Grenade": {
       "throwable.max_count": 3
