@@ -1,7 +1,7 @@
 # hellforge-rebalanced
 Rebalance mod for Hellforge. Increases high-end difficulty, improves gameplay 'feel' and weapon handling, buffs underperforming equipment, and reworks equipment without an effective role in the arsenal.
 
-**Current version: 1.0.9** · Made for game build 25480438, the build HellForge runs.
+**Current version: 1.10.0** · Made for game build 25480438, the build HellForge runs.
 
 [Full patch notes](https://telair-jc.github.io/hellforge-rebalanced/) · [Releases](../../releases)
 
@@ -45,7 +45,7 @@ These are mods where I am actively trying to maintain equipment balance for:
 ## Install
 
 1. Close HellForge.
-2. Download `hellforge-rebalanced-1.0.9.zip` from [Releases](../../releases) and copy the mod folder from it into `<your HellForge folder>\mods\`, replacing any older copy of this mod.
+2. Download `hellforge-rebalanced-1.10.0.zip` from [Releases](../../releases) and copy the mod folder from it into `<your HellForge folder>\mods\`, replacing any older copy of this mod.
 3. Clear F8's Local Stats. Changes you apply in the HellForge Editor are saved as Local Stats and always win over mods, so while they are present you will see a stats-conflict notice on the changed fields. The mod folder's own `README.md` explains how.
 4. Start HellForge and press **PLAY**.
 

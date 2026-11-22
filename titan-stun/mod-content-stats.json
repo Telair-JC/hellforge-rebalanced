@@ -121,11 +121,22 @@
   },
   "mod:skyeshade/compendium/orbital_gas_barrage": {
     "skyeshade/compendium/orbital_gas_barrage": {
-      "stratagem.cooldown": 180,
+      "stratagem.cooldown": 210,
       "orbital.salvos": 5,
       "orbital.shells_per_salvo": 5,
       "orbital.scatter": 25,
       "orbital.shell_interval": 0.5
+    }
+  },
+  "mod:alazynoob/ar23l_backport/assault_rifle_legacy": {
+    "alazynoob/ar23l_backport/assault_rifle_legacy": {
+      "fire_mode.modes.1": 3,
+      "weapon.fire_rate": 1120,
+      "weapon.sway": 0.5,
+      "weapon.recoil_climb_horizontal": 2,
+      "weapon.recoil_climb_vertical": 20,
+      "weapon.recoil_drift_horizontal": 5,
+      "weapon.recoil_drift_vertical": 15
     }
   },
   "mod:skyeshade/compendium/orbital_ems_barrage": {
