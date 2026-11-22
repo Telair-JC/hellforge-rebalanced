@@ -1,7 +1,7 @@
 # hellforge-rebalanced
 Rebalance mod for Hellforge. Increases high-end difficulty, improves gameplay 'feel' and weapon handling, buffs underperforming equipment, and reworks equipment without an effective role in the arsenal.
 
-**Current version: 1.1.0** · Made for game build 25480438, the build HellForge runs.
+**Current version: 1.1.1** · Made for game build 25480438, the build HellForge runs.
 
 [Full patch notes](https://telair-jc.github.io/hellforge-rebalanced/) · [Releases](../../releases)
 
@@ -37,6 +37,7 @@ These are highly recommended pairings for the gameplay experience:
 These are mods where I am actively trying to maintain equipment balance for:
 
 - **[Scope of Authority Backport](https://hf-mod.com/Mods/Details/52)**: Backport for Scope of Authority warbond, currently a bit buggy in 0.4.0 release but will be improved with 0.5.0. Yes, the Sightliner one-shots Hulk eyes (and pays for it with reduced ammunition).
+- **[AR-23L Liberator Legacy backport](https://www.nexusmods.com/helldivers2/mods/19036)**: The Liberty Day Liberator Legacy, backported by alazynoob. Rebalanced here as a high fire rate Liberator variant restricted to burst fire (replacing its auto mode) and semi, with the shared Liberator round and magazine changes. Optional: the rebalance simply skips it if the mod isn't installed.
 - **[Beelzebub's Stratagem Pack](https://hf-mod.com/Mods/Details/4)**: Stratagem pack by Beelzebub, adds a number of interesting tools to the arsenal. Balance of many of these was inconsistent with the system I'd been working on, and have been adjusted accordingly. This does include some nerfs. More adjustments likely after 0.5.0 release.
 - **[Custom Stratagem Compendium](https://hf-mod.com/Mods/Details/1)**: Similar to above, a number of interesting new arsenal tools. Rebalancing of these is ongoing, and will include both buffs and nerfs. More adjustments likely after 0.5.0 release.
 - **[Pick your Bots/Bugs/Squids](https://hf-mod.com/Mods/Details/17)**: This balance pack is balancing around the top ~20% of equipment in the game, and let's face it... the game just isn't that difficult with a competent team and gear that powerful, even at the increased threat levels of this mod. This lets you make it genuinely hard. Personally, if I'm playing with at least 2 people, I recommend making breaches more scary by reducing the reinforcement cost of units in the breach, but up to you to experiment. In the future I may make presets to recommend, but that's a ways down the road.
@@ -45,7 +46,7 @@ These are mods where I am actively trying to maintain equipment balance for:
 ## Install
 
 1. Close HellForge.
-2. Download `hellforge-rebalanced-1.1.0.zip` from [Releases](../../releases) and copy the mod folder from it into `<your HellForge folder>\mods\`, replacing any older copy of this mod.
+2. Download `hellforge-rebalanced-1.1.1.zip` from [Releases](../../releases) and copy the mod folder from it into `<your HellForge folder>\mods\`, replacing any older copy of this mod.
 3. Clear F8's Local Stats. Changes you apply in the HellForge Editor are saved as Local Stats and always win over mods, so while they are present you will see a stats-conflict notice on the changed fields. The mod folder's own `README.md` explains how.
 4. Start HellForge and press **PLAY**.
 

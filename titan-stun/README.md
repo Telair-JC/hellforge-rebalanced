@@ -65,6 +65,11 @@ exactly as F8 would.
 
 - **Needs** Giblett's Beelzebub pack, Scope of Authority and SkyeShade's Stratagem Compendium installed and enabled. Items whose mod isn't loaded are
   skipped and named in the log.
+- **AR-23L Liberator Legacy (optional):** AR-Liberator-Legacy backport by alazynoob. Its fire rate, sway, recoil and
+  and burst (it replaces the first fire mode, auto) are written as live edits on top of that mod's own stats, so they win whatever the load order
+  (keeping Rebalanced above it is still tidy). If the Legacy isn't installed, the values are skipped with one log line.
+  Check `mod-local.titan-stun.log` for
+  `Legacy first fire mode` and `Legacy ... =` lines.
 - **Your own `mod-stats.json`:** you no longer need it for these. You can leave it (F8 applies the same values on top,
   which is harmless) or back it up and remove the `mod:` entries. If you keep editing these items in F8, F8's values
   win for that session; copy them into `mod-content-stats.json` to make them part of the mod.

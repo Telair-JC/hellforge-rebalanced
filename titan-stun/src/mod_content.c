@@ -353,6 +353,54 @@ static void ApplyWeapon(const char* category, const char* target, const cJSON* v
     }
 }
 
+/* ---- AR-23L Liberator Legacy (alazynoob.ar23l-backport), optional --------------------------------------------------
+ * That mod adds the weapon and writes its own wiki stats (660 rpm, no burst) as load-time edits. This mod has no editor page
+ * for it, so its values are applied by hand as live edits on the weapon's entity (found by its resource name), which sit over
+ * the other mod's load-time edits whatever the load order, and are renewed if the game reloads its data. Nothing here needs
+ * the Legacy: when it is not installed the values are skipped with one log line.
+ * Burst replaces the first fire mode (auto): writing it into the third slot added burst as a third option. */
+#define LEGACY_CATEGORY "mod:alazynoob/ar23l_backport/assault_rifle_legacy"
+#define LEGACY_UNIT "alazynoob/ar23l_backport/assault_rifle_legacy"
+typedef struct { const char* key; const char* component; uint16_t offset; uint8_t type; } LegacyRow;
+static const LegacyRow kLegacy[] = {
+    {"fire_mode.modes.1", "WeaponDataComponentData", 0x90, HF_TYPE_U32}, /* fire_modes[0], the first mode (auto) becomes burst; the slot the Legacy mod zeroed (2) stays off */
+    {"weapon.fire_rate", "ProjectileWeaponComponentData", 0x04 + 1 * 4, HF_TYPE_F32}, /* fire_rate[1], the default slot */
+    {"weapon.sway", "WeaponDataComponentData", 0x68, HF_TYPE_F32},
+    {"weapon.recoil_climb_horizontal", "WeaponDataComponentData", 0x1C, HF_TYPE_F32},
+    {"weapon.recoil_climb_vertical", "WeaponDataComponentData", 0x20, HF_TYPE_F32},
+    {"weapon.recoil_drift_horizontal", "WeaponDataComponentData", 0x00, HF_TYPE_F32},
+    {"weapon.recoil_drift_vertical", "WeaponDataComponentData", 0x04, HF_TYPE_F32},
+};
+
+static void ApplyLegacy(const char* target, const cJSON* values, int final, Tally* t)
+{
+    int count = cJSON_GetArraySize(values);
+    uint64_t entity = g_hf->resource_hash(LEGACY_UNIT);
+    HfLiveValue probe;
+    HfField modes = {"WeaponDataComponentData", LAYOUT, 0x90, 4, HF_TYPE_U32, 0};
+    if (!entity || !g_hf->get_live(g_mod, entity, &modes, &probe))
+    {
+        /* never counted as waiting: a Legacy that is not installed must not hold up the other values */
+        if (final) { LOG("mod content: AR-23L Liberator Legacy is not installed or not readable; its %d value(s) skipped", count); t->missing += count; }
+        return;
+    }
+    if (!final) return;
+    const cJSON* v;
+    cJSON_ArrayForEach(v, values)
+    {
+        const LegacyRow* use = NULL;
+        for (size_t i = 0; i < sizeof kLegacy / sizeof kLegacy[0]; i++) if (!strcmp(kLegacy[i].key, v->string)) use = &kLegacy[i];
+        if (!use || !cJSON_IsNumber(v)) { LOG("mod content: %s has no field %s; skipped", target, v->string); t->missing++; continue; }
+        HfField field = {use->component, LAYOUT, use->offset, 4, use->type, 0};
+        double value = v->valuedouble;
+        if (!strcmp(use->key, "fire_mode.modes.1")) /* the file's value is the fire mode (3 = burst) */
+        { HfLiveValue before; if (g_hf->get_live(g_mod, entity, &field, &before)) LOG("mod content: Legacy first fire mode was %g, setting %g (burst replaces auto)", before.now.number, value); }
+        HfValue hv = {use->type, value, 0};
+        if (g_hf->set_live(g_mod, entity, &field, &hv, 0)) { t->applied++; LOG("mod content: Legacy %s = %g", use->key, value); }
+        else { t->refused++; LOG("mod content: Legacy %s = %g refused (%s)", use->key, value, g_hf->last_log(g_mod)); }
+    }
+}
+
 /* Fields copied from one record to another in the running game, so the copy always matches the source as the game (and
  * HellForge) has it. The G-109 Urchin's detonation damage takes the G-23 Stun's Status 1; its Status 2 is in
  * hellforge-stats.json (your G-23 values), since HellForge may still be applying the G-23's there when this runs. */
@@ -396,6 +444,7 @@ static Tally Pass(int final)
         {
             if (!cJSON_IsObject(target)) continue;
             if (!strcmp(category->string, "mod:giblett.scope-of-authority")) ApplyWeapon(category->string, target->string, target, final, &t);
+            else if (!strcmp(category->string, LEGACY_CATEGORY)) ApplyLegacy(target->string, target, final, &t);
             else ApplyStratagem(category->string + 4, target, final, &t);
         }
     }
