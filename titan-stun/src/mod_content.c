@@ -353,6 +353,160 @@ static void ApplyWeapon(const char* category, const char* target, const cJSON* v
     }
 }
 
+/* ---- AR-23L Liberator Legacy (alazynoob.ar23l-backport), optional --------------------------------------------------
+ * That mod adds the weapon and writes its own wiki stats (660 rpm, no burst) as load-time edits. This mod has no editor page
+ * for it, so its values are applied by hand as live edits on the weapon's entity (found by its resource name), which sit over
+ * the other mod's load-time edits whatever the load order, and are renewed if the game reloads its data. Nothing here needs
+ * the Legacy: when it is not installed the values are skipped with one log line.
+ * Burst replaces the first fire mode (auto): writing it into the third slot added burst as a third option. */
+#define LEGACY_CATEGORY "mod:alazynoob/ar23l_backport/assault_rifle_legacy"
+#define LEGACY_UNIT "alazynoob/ar23l_backport/assault_rifle_legacy"
+typedef struct { const char* key; const char* component; uint16_t offset; uint8_t type; } LegacyRow;
+static const LegacyRow kLegacy[] = {
+    {"fire_mode.modes.1", "WeaponDataComponentData", 0x90, HF_TYPE_U32}, /* fire_modes[0], the first mode (auto) becomes burst; the slot the Legacy mod zeroed (2) stays off */
+    {"weapon.fire_rate", "ProjectileWeaponComponentData", 0x04 + 1 * 4, HF_TYPE_F32}, /* fire_rate[1], the default slot */
+    {"weapon.sway", "WeaponDataComponentData", 0x68, HF_TYPE_F32},
+    {"weapon.recoil_climb_horizontal", "WeaponDataComponentData", 0x1C, HF_TYPE_F32},
+    {"weapon.recoil_climb_vertical", "WeaponDataComponentData", 0x20, HF_TYPE_F32},
+    {"weapon.recoil_drift_horizontal", "WeaponDataComponentData", 0x00, HF_TYPE_F32},
+    {"weapon.recoil_drift_vertical", "WeaponDataComponentData", 0x04, HF_TYPE_F32},
+};
+
+static void TextStart(void);
+static void ApplyLegacy(const char* target, const cJSON* values, int final, Tally* t)
+{
+    int count = cJSON_GetArraySize(values);
+    uint64_t entity = g_hf->resource_hash(LEGACY_UNIT);
+    HfLiveValue probe;
+    HfField modes = {"WeaponDataComponentData", LAYOUT, 0x90, 4, HF_TYPE_U32, 0};
+    if (!entity || !g_hf->get_live(g_mod, entity, &modes, &probe))
+    {
+        /* never counted as waiting: a Legacy that is not installed must not hold up the other values */
+        if (final) { LOG("mod content: AR-23L Liberator Legacy is not installed or not readable; its %d value(s) skipped", count); t->missing += count; }
+        return;
+    }
+    if (!final) return;
+    const cJSON* v;
+    cJSON_ArrayForEach(v, values)
+    {
+        const LegacyRow* use = NULL;
+        for (size_t i = 0; i < sizeof kLegacy / sizeof kLegacy[0]; i++) if (!strcmp(kLegacy[i].key, v->string)) use = &kLegacy[i];
+        if (!use || !cJSON_IsNumber(v)) { LOG("mod content: %s has no field %s; skipped", target, v->string); t->missing++; continue; }
+        HfField field = {use->component, LAYOUT, use->offset, 4, use->type, 0};
+        double value = v->valuedouble;
+        if (!strcmp(use->key, "fire_mode.modes.1")) /* the file's value is the fire mode (3 = burst) */
+        { HfLiveValue before; if (g_hf->get_live(g_mod, entity, &field, &before)) LOG("mod content: Legacy first fire mode was %g, setting %g (burst replaces auto)", before.now.number, value); }
+        HfValue hv = {use->type, value, 0};
+        if (g_hf->set_live(g_mod, entity, &field, &hv, 0)) { t->applied++; LOG("mod content: Legacy %s = %g", use->key, value); }
+        else { t->refused++; LOG("mod content: Legacy %s = %g refused (%s)", use->key, value, g_hf->last_log(g_mod)); }
+    }
+    TextStart();
+}
+
+/* ---- AR-23L description text (experimental) -------------------------------------------------------------------------
+ * The backport adds the weapon with its own description, which HellForge's SDK cannot change from another mod. When the
+ * Legacy is installed this sweeps (until it finds and replaces the text, then stops) the process's private writable memory, a slice per tick, for that exact text (UTF-8 and
+ * UTF-16) and writes ours over it in place, padded with spaces to the same length. Images (code and constants, including
+ * the backport's and this mod's own copies) are never touched. Nothing is written if the text is not found. */
+#define LEGACY_OLD_TEXT "The Liberty Day 2186 rifle, styled after the original Liberator, with its own magazines and scope: auto and semi, 660 rpm. Every squad member needs this mod and the updated live game."
+#define LEGACY_NEW_TEXT "The Liberty Day 2186 rifle, styled after the original Liberator with its own magazines, scope, and historically accurate ammo-conserving burst fire mode."
+#define TEXT_SWEEPS 2
+#define TEXT_SLICE (4u << 20)
+#define TEXT_GAP_SECONDS 15.0f
+#define TEXT_CHUNK (1u << 20)
+static char g_oldU8[256], g_newU8[256];
+static wchar_t g_oldU16[256], g_newU16[256];
+static size_t g_lenU8, g_lenU16;
+static unsigned char g_chunk[TEXT_CHUNK + 1024];
+static int g_textState, g_textSweeps, g_textReplaced, g_textRegions;
+static uintptr_t g_scanAddr;
+static float g_textWait;
+
+static void TextStart(void)
+{
+    if (g_textState) return;
+    snprintf(g_oldU8, sizeof g_oldU8, "%s", LEGACY_OLD_TEXT);
+    snprintf(g_newU8, sizeof g_newU8, "%s", LEGACY_NEW_TEXT);
+    g_lenU8 = strlen(g_oldU8);
+    int a = MultiByteToWideChar(CP_UTF8, 0, LEGACY_OLD_TEXT, -1, g_oldU16, 256) - 1;
+    int b = MultiByteToWideChar(CP_UTF8, 0, LEGACY_NEW_TEXT, -1, g_newU16, 256) - 1;
+    if (a <= 0 || b <= 0 || (size_t)b > (size_t)a || strlen(g_newU8) > g_lenU8) { LOG("mod content: Legacy description text not used (new text too long)"); g_textState = 3; return; }
+    g_lenU16 = (size_t)a;
+    for (size_t i = (size_t)b; i < g_lenU16; i++) g_newU16[i] = L' ';
+    for (size_t i = strlen(g_newU8); i < g_lenU8; i++) g_newU8[i] = ' ';
+    g_newU8[g_lenU8] = 0;
+    g_textState = 1; g_scanAddr = 0x10000; g_textSweeps = 0; g_textWait = 0.0f;
+    LOG("mod content: Legacy description text: sweeping memory for the backport's text (experimental)");
+}
+
+static void TextPatch(uintptr_t at, const void* data, size_t len, const char* what)
+{
+    SIZE_T wrote = 0;
+    if (WriteProcessMemory(GetCurrentProcess(), (LPVOID)at, data, len, &wrote) && wrote == len) { g_textReplaced++; g_textState = 2; LOG("mod content: Legacy description text replaced (%s copy at %p); sweep stopped", what, (void*)at); }
+    else LOG("mod content: Legacy description text found at %p but not writable", (void*)at);
+}
+
+/* The Legacy's description in one chunk of memory. */
+static void TextScanChunk(uintptr_t base, size_t got)
+{
+    for (size_t i = 0; i + g_lenU8 <= got; i++)
+    {
+        unsigned char* p = (unsigned char*)memchr(g_chunk + i, 'T', got - g_lenU8 - i + 1);
+        if (!p) break;
+        i = (size_t)(p - g_chunk);
+        if (!memcmp(p, g_oldU8, g_lenU8)) TextPatch(base + i, g_newU8, g_lenU8, "UTF-8");
+    }
+    size_t bytes16 = g_lenU16 * 2;
+    for (size_t i = (((base + 1) & ~(uintptr_t)1) - base); i + bytes16 <= got; i += 2)
+    {
+        if (g_chunk[i] != 'T' || g_chunk[i + 1] != 0) continue;
+        if (!memcmp(g_chunk + i, g_oldU16, bytes16)) TextPatch(base + i, g_newU16, bytes16, "UTF-16");
+    }
+}
+
+/* One slice of a sweep: at most TEXT_SLICE bytes of private, writable, committed memory. */
+static void TextSlice(void)
+{
+    size_t budget = TEXT_SLICE;
+    size_t overlap = (g_lenU16 * 2 > g_lenU8 ? g_lenU16 * 2 : g_lenU8);
+    while (budget)
+    {
+        MEMORY_BASIC_INFORMATION mbi;
+        if (g_scanAddr >= (uintptr_t)0x7FFFFFFE0000ull || !VirtualQuery((LPCVOID)g_scanAddr, &mbi, sizeof mbi))
+        {
+            g_textSweeps++;
+            LOG("mod content: Legacy description text sweep %d done: %d region(s) read, %d replacement(s) so far", g_textSweeps, g_textRegions, g_textReplaced);
+            g_textRegions = 0;
+            g_scanAddr = 0x10000;
+            g_textWait = TEXT_GAP_SECONDS;
+            if (g_textSweeps >= TEXT_SWEEPS) g_textState = 2;
+            return;
+        }
+        uintptr_t start = (uintptr_t)mbi.BaseAddress, end = start + mbi.RegionSize;
+        int ok = mbi.State == MEM_COMMIT && mbi.Type == MEM_PRIVATE && !(mbi.Protect & (PAGE_GUARD | PAGE_NOACCESS)) &&
+                 (mbi.Protect & (PAGE_READWRITE | PAGE_EXECUTE_READWRITE));
+        if (!ok) { g_scanAddr = end; continue; }
+        if (g_scanAddr < start) g_scanAddr = start;
+        size_t want = end - g_scanAddr;
+        if (want > TEXT_CHUNK) want = TEXT_CHUNK;
+        if (want > budget) want = budget;
+        SIZE_T got = 0;
+        if (ReadProcessMemory(GetCurrentProcess(), (LPCVOID)g_scanAddr, g_chunk, want, &got) && got >= g_lenU8) { TextScanChunk(g_scanAddr, got); if (g_scanAddr == start) g_textRegions++; }
+        if (g_textState != 1) return; /* replaced: the sweep is over */
+        budget = budget > want ? budget - want : 0;
+        /* step back so a text that crosses a chunk edge is still seen, unless the region ends here */
+        g_scanAddr += want;
+        if (g_scanAddr < end && want > overlap) g_scanAddr -= overlap;
+    }
+}
+
+static void TextTick(float dt)
+{
+    if (g_textState != 1) return;
+    if (g_textWait > 0.0f) { g_textWait -= dt; return; }
+    TextSlice();
+}
+
 /* Fields copied from one record to another in the running game, so the copy always matches the source as the game (and
  * HellForge) has it. The G-109 Urchin's detonation damage takes the G-23 Stun's Status 1; its Status 2 is in
  * hellforge-stats.json (your G-23 values), since HellForge may still be applying the G-23's there when this runs. */
@@ -396,6 +550,7 @@ static Tally Pass(int final)
         {
             if (!cJSON_IsObject(target)) continue;
             if (!strcmp(category->string, "mod:giblett.scope-of-authority")) ApplyWeapon(category->string, target->string, target, final, &t);
+            else if (!strcmp(category->string, LEGACY_CATEGORY)) ApplyLegacy(target->string, target, final, &t);
             else ApplyStratagem(category->string + 4, target, final, &t);
         }
     }
@@ -416,6 +571,7 @@ static void Attempt(void)
 
 void ModContentTick(float dt)
 {
+    TextTick(dt);
     if (g_state == 2 && g_directCount)
     {
         g_directWait -= dt;
